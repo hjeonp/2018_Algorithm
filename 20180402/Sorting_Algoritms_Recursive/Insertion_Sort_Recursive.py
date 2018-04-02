@@ -1,8 +1,8 @@
 def Insertion_Sort_Recursive(arr, p, q):
 	if(p==q): return
 	Insertion_Sort_Recursive(arr, p, q-1)
-	last = arr[q-1]
-	j = q-2
+	last = arr[q]
+	j = q-1
 	while(j>=0 and arr[j] > last):
 		arr[j+1] = arr[j]
 		j = j-1

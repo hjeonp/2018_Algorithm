@@ -1,7 +1,7 @@
 def Selection_Sort_Recursive(arr, p, q):
 	if(p==q): return
-	max = arr[p]
-	for i in range(p,  q+1):
+	max = p
+	for i in range(p+1,  q+1):
 		if arr[max] < arr[i]: max = i
 	arr[q], arr[max] = arr[max], arr[q]
 	Selection_Sort_Recursive(arr, p, q-1)
