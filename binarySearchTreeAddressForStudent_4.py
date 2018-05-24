@@ -29,20 +29,9 @@ class BST:
         infile.close()
 
     def saveFile(self, file=None):
-        if file == None:
-            return
+        outfile=open(file,"w")
+        self.inOrder2(self.root,file,outfile)
 
-        try:
-            outfile = open(file, "w")
-        except IOError:
-            print("Unable to Save" + file)
-
-        else:
-            self.saveLine()
-            self.saveFile()
-        
-    def saveLine(self, x, outfile):
-        pass
 
     def inOrder(self, x):
         if x.left == None: return
@@ -53,6 +42,19 @@ class BST:
         if x.right == None: return
         else:
             self.inOrder(x.right)
+
+    def inOrder2(self, x, name,outfile):
+        if x.left == None:
+            return
+        else:
+            self.inOrder2(x.left,name,outfile)
+        string=x.key+'|'+printer_2(x.personInfo.company)+'|'+printer_2(x.personInfo.address)+'|'+\
+                printer_2(x.personInfo.zipcode) +'|'+ printer_2(x.personInfo.phone)+'|'+printer_2(x.personInfo.email)+'\n'
+        outfile.write(string)
+        if x.right == None:
+            return
+        else:
+            self.inOrder2(x.right,name,outfile)
 
           
     def TREE_INSERT(self, z):
@@ -79,27 +81,29 @@ class BST:
                     temp=temp.right
 
     def TREE_SEARCH(self, x, k):
-        if x == None: return None
+        if x == None:
+            return None
 
-        if x.key==k:
+        if x.key.split()[0]==k:
             return x
 
         elif x.key > k:
-            self.TREE_SEARCH(x.left, k)
+            return self.TREE_SEARCH(x.left, k)
 
         else:
-            self.TREE_SEARCH(x.right, k)
+            return self.TREE_SEARCH(x.right, k)
     
     def printer(self, x):
         print(x.key)
-        print("Company: " , x.personInfo.company)
-        print("Address: ", x.personInfo.address)
-        print("ZipCode: ", x.personInfo.zipcode)
-        print("Phone: ", x.personInfo.phone)
-        print("Email: ",  x.personInfo.email)
+        print("Company: " , printer_2(x.personInfo.company))
+        print("Address: ", printer_2(x.personInfo.address))
+        print("ZipCode: ", printer_2(x.personInfo.zipcode))
+        print("Phone: ", printer_2(x.personInfo.phone))
+        print("Email: ",  printer_2(x.personInfo.email))
 
     def TREE_TRACE(self, x, k):
-        if x == None: return
+        if x == None:
+            return
 
         if x.key==k:
             print(k)
@@ -107,11 +111,11 @@ class BST:
 
         elif x.key > k:
             print(x.key)
-            self.TREE_SEARCH(x.left, k)
+            self.TREE_TRACE(x.left, k)
 
         else:
             print(x.key)
-            self.TREE_SEARCH(x.right, k)
+            self.TREE_TRACE(x.right, k)
         
     def TREE_MINIMUM(self, x):
         pass
@@ -120,13 +124,61 @@ class BST:
         pass
 
     def TREE_SUCCESSOR(self, x):
-        pass
+        if x.right!=None:
+            while True:
+                temp=x.parent
+                if temp.left==temp:
+                    break
+            if temp.parent.left==temp:
+                temp.parent.left=x
+                x.left==temp.left
+            else:
+                temp.parent.right==x
+                x.right=temp.right
+        else:
+            temp=x.right
+            while temp.left!=None:
+                temp=temp.right
+            if temp.parent.left==temp:
+                temp.parent.left=x
+                x.left==temp.left
+            else:
+                temp.parent.right==x
+                x.right=temp.right
 
     def TREE_PREDECESSOR(self, x):
         pass
 
     def TREE_DELETE(self, z):
-        pass
+        if z.left==None and z.right==None:
+            if z.parent.left==z:
+                z.parent.left=None
+            else:
+                z.parent.right=None
+        elif z.left!=None and z.right!=None:
+            self.TREE_SUCCESSOR(z)
+        else:
+            if z.left!=None:
+                if z.parent.left==z:
+                    z.parent.left=z.left
+                    z.left.parent=z.parent
+                else:
+                    z.parent.right=z.left
+                    z.right.parent=z.parent
+            else:
+                if z.parent.left==z:
+                    z.parent.left=z.right
+                    z.left.parent=z.parent
+                else:
+                    z.parent.right=z.right
+                    z.right.parent=z.parent
+
+def printer_2(arr):
+     temp_str = ""
+     for char in arr:
+         temp_str += char
+         temp_str += " "
+     return temp_str
 
 personBST = None
 choice = -1
@@ -153,12 +205,12 @@ while(choice != 0):
                 if (x == None):
                     print("Not found it! Try again!")
                 else:
-                    print(x.personInfo.name)
-                    print(" 회사: ", x.personInfo.company)
-                    print(" 주소: ", x.personInfo.address)
-                    print(" 우편번호: ", x.personInfo.zipcode)
-                    print(" 전화번호: ", x.personInfo.phone)
-                    print(" 전자우편: ", x.personInfo.email)
+                    print(printer_2(x.personInfo.name))
+                    print(" 회사: ", printer_2(x.personInfo.company))
+                    print(" 주소: ", printer_2(x.personInfo.address))
+                    print(" 우편번호: ", printer_2(x.personInfo.zipcode))
+                    print(" 전화번호: ", printer_2(x.personInfo.phone))
+                    print(" 전자우편: ", printer_2(x.personInfo.email))
                     
     elif (choice == 3):                    
         while (input("Do you want to trace some people? (y, n):")=='y'):
@@ -193,6 +245,3 @@ while(choice != 0):
                 break
             sName = input("input your file name to save BST: ")
             personBST.saveFile(sName)
-
-
-
